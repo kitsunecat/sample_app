@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails',        '5.1.6'
+gem 'bcrypt',       '3.1.12' #パスワード(password_digest)をハッシュ化する
 gem 'bootstrap-sass', '3.3.7' #bootstrapの導入。LESSを使った変数を使える
 gem 'puma',         '3.9.1'
 gem 'sass-rails',   '5.0.6'
