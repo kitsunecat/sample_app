@@ -4,8 +4,16 @@
   <body>
     <%= render 'layouts/header' %>
     <div class="container">
+      <% flash.each do |message_type, message| %>
+        <%# flashの内容はコントローラから受け取る %>
+
+        <%= content_tag(:div, message, class:"alert alert-#{message_type}") %>
+        <%# <div>タグ追加。タグで囲むテキストは"message"、クラス名は"alert"と"alert-<message_type>" %>
+
+      <% end %>
       <%= yield %>
       <%= render 'layouts/footer' %>
+      <%= debug(params) if Rails.env.development? %>
     </div>
   </body>
 </html>
