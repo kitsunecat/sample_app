@@ -26,7 +26,8 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                      }
                               }
     end
-    follow_redirect!
+    follow_redirect! #POSTしたリクエストを送信した結果を見て、指定されたリダイレクト先に移動する
+    #usersコントローラのcreateメソッドでredirect_to user_url(@user)としていされているためそこにいく
     assert_template 'users/show'
     assert_not flash.empty? #ちゃんと何かしらflashメッセージが表示されること
   end

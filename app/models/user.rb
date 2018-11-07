@@ -15,4 +15,12 @@ class User < ApplicationRecord
              presence: true #has_secure_passwordが新規作成時の検証では存在性の検証もしてくれるが
                             #更新のときはしてくれない
   has_secure_password
+
+  # 渡された文字列のハッシュ値を返す
+  def User.digest(string)
+    cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST :
+                                                  BCrypt::Engine.cost
+    BCrypt::Password.create(string, cost: cost)
+  end
+  
 end
