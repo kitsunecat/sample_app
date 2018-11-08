@@ -15,6 +15,8 @@ class SessionsController < ApplicationController
   end
 
   def destroy
+    log_out #ヘルパーモジュールで定義している
+    redirect_to root_url
   end
 
 end
