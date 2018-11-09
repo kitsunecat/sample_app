@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  attr_accessor :remember_token
+
   before_save {self.email = email.downcase } #validates実施前にemailアドレスは小文字化する
   # ->before_save {email.downcase! } #元データを直接編集するやりかたならこっち
 
@@ -22,5 +24,30 @@ class User < ApplicationRecord
                                                   BCrypt::Engine.cost
     BCrypt::Password.create(string, cost: cost)
   end
-  
+
+  #ランダムなトークンを返す
+  def User.new_token
+    SecureRandom.urlsafe_base64
+  end
+
+  #永続セッションのためにユーザーをデータベースに記憶する
+  def remember
+    self.remember_token = User.new_token
+    update_attribute(:remember_digest, User.digest(remember_token))
+  end
+
+  # 渡されたトークンがダイジェストと一致したらtrueを返す
+  def authenticated?(remember_token)
+    return false if remember_digest.nil?
+     #他のブラウザですでにログアウトしているなどで
+     #remembe_digestが空のときはfalseを返す
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    #BCryptクラスのPasswordクラスのオブジェクトをDBに保存されているremembe_digestを引数に新規作成
+    #それを.is_password?でCookieから取り出したremember_tokenと比較する
+  end
+
+  #ユーザーのログイン情報を破棄する
+  def forget
+    update_attribute(:remember_digest, nil)
+  end
 end
