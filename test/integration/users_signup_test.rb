@@ -5,7 +5,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
   #不正なデータでCreate仕様とするとユーザ登録できないテスト
   test "invarid signup infomation" do
     get signup_path #これがなくても直接CREATEにPOSTすれば確認できる
-    assert_select 'form[action=?]',"/signup" #"/signup"をそのまま?に書いても問題なし
+    # assert_select 'form[action=?]',"/signup" #"/signup"をそのまま?に書いても問題なし
     assert_no_difference 'User.count' do #ブロック実行後、User.countが変化しないこと
       post signup_path, params: { user: {name:"",
                                         email:"",

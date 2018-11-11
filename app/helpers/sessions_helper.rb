@@ -11,6 +11,11 @@ module SessionsHelper
     cookies.permanent[:remember_token] = user.remember_token #remember_tokenをユーザのCookieに保存する
   end
 
+  # 渡されたユーザーがログイン済みユーザーであればtrueを返す
+  def current_user?(user)
+    user == current_user
+  end
+
   #記憶トークンCookieに対応するユーザを返す
   def current_user
     if (user_id = session[:user_id])
@@ -44,4 +49,26 @@ module SessionsHelper
     session.delete(:user_id) #:user_idは引数として渡す
     @current_user = nil #セキュリティ上、一応nilにしておく
   end
+
+  #記憶したURL（もしくはデフォルト値）にリダイレクト
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+      #値がnilでなければsession[:forwarding_url]を評価し、そうでなければdefaultのURLを使う
+    session.delete(:forwarding_url)
+      #リダイレクトしたらCookieからリダイレクト先のデータを削除
+      #これをしていなければ次回ログインしたとき保護されたページに転送されてしまう
+  end
+
+  #アクセスしようとしていたURLを覚えておく
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+      #一時Cookieの:forwarding_urlにアクセスしようとしていたURLを保存
+      #アクセスしようとしていたURLは"request.original_url"で取得できる
+      #覚えておくURLはGETメソッドだけ
+        #例えばログインしていないユーザーがフォームを使って送信した場合、転送先のURLを保存させないようにする。
+          #セッション用のcookieを手動で削除してフォームから送信するケースなどで想定される
+          #POSTや PATCH、DELETEリクエストを期待しているURLに対して、(リダイレクトを通して)
+          #GETリクエストが送られてしまい、場合によってはエラーが発生
+  end
+
 end

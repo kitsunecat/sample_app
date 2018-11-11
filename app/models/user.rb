@@ -14,8 +14,9 @@ class User < ApplicationRecord
                     uniqueness: {case_sensitive: false} #case_sensitive:大文字小文字を区別しない
 
   validates :password, length: { minimum: 6 },
-             presence: true #has_secure_passwordが新規作成時の検証では存在性の検証もしてくれるが
-                            #更新のときはしてくれない
+                       presence: true, #has_secure_passwordが新規作成時の検証では存在性の検証もしてくれるが
+                                       #更新のときはしてくれない
+                       allow_nil: true #更新のときは空白でもよい
   has_secure_password
 
   # 渡された文字列のハッシュ値を返す

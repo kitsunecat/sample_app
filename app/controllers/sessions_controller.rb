@@ -10,7 +10,10 @@ class SessionsController < ApplicationController
       log_in @user #ログイン処理(sessionsヘルパーメソッドに定義)
       params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
         #remember_meチェックボックスがONならユーザー情報をCookieに保存する。
-      redirect_to @user #ユーザログイン後にユーザ情報のページにリダイレクトする
+      redirect_back_or @user
+        #session[:forwarding_url]がnilでなければユーザのshowページに移動
+        #session[:forwarding_url]がnilであればリクエストしていたページに移動
+        #※return文やメソッド内の最終行が呼び出されない限り、リダイレクトは発生しない
     else
       flash.now[:danger] = 'Invalid email/password combination' #エラーメッセージを表示する
       #.nowをつけることでレンダリングが終わっているページで特別に不アッシュメッセージを表示する
