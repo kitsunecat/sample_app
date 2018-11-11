@@ -1,9 +1,6 @@
 require 'test_helper'
 
 class SiteLayoutTest < ActionDispatch::IntegrationTest
-  def setup
-    @user = users(:michael)
-  end
 
   test "layout links" do
     get root_path
@@ -19,8 +16,13 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     # Signupページのテスト
     get signup_path
     assert_equal full_title("Sign up"), "Sign up | Ruby on Rails Tutorial Sample App"
+  end
 
+  def setup
+    @user = users(:michael)
+  end
 
+  test "layout links with user logged in" do
     #ログイン後のリンクがちゃんと貼れているテスト
     get login_path #ログインページにアクセス
     #ユーザ情報を入力してログイン
@@ -35,7 +37,6 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", user_path(@user)
     assert_select "a[href=?]", edit_user_path(@user)
     assert_select "a[href=?]", logout_path
-
-
   end
+  
 end

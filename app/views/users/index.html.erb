@@ -2,6 +2,20 @@
 
 <h1>All users</h1>
 
+<%= will_paginate %>
+    <%#
+    will_paginateメソッドは少々不思議なことに、usersビューのコードの中から
+    @usersオブジェクトを自動的に見つけ出し、
+    それから他のページにアクセスするためのページネーションリンクを作成しています。
+    will_paginateではpaginateメソッドを使った結果が必要
+    > User.paginate(page: n)
+      => nページ目のデータを取得。デフォルトは1ページ10件
+
+    usersコントローラのindexアクションで記載
+      @users = User.paginate(page: params[:page])
+    params[:page]の部分はwill_pagenateによって自動生成
+     %>
+
 <ul class="users">
   <% @users.each do |user| %>
     <li>
@@ -10,3 +24,5 @@
     </li>
   <% end %>
 </ul>
+
+<%= will_paginate %>

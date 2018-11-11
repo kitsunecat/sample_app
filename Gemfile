@@ -1,8 +1,6 @@
 source 'https://rubygems.org'
 
 gem 'rails',        '5.1.6'
-gem 'bcrypt',       '3.1.12' #パスワード(password_digest)をハッシュ化する
-gem 'bootstrap-sass', '3.3.7' #bootstrapの導入。LESSを使った変数を使える
 gem 'puma',         '3.9.1'
 gem 'sass-rails',   '5.0.6'
 gem 'uglifier',     '3.2.0'
@@ -11,6 +9,23 @@ gem 'jquery-rails', '4.3.1'
 gem 'turbolinks',   '5.0.1'
 gem 'jbuilder',     '2.7.0'
 gem 'mini_racer'
+
+#パスワード(password_digest)をハッシュ化する
+  gem 'bcrypt',       '3.1.12'
+
+#bootstrapの導入。LESSを使った変数を使える
+  gem 'bootstrap-sass', '3.3.7'
+
+#実際にいそうなユーザを作成するGEM
+  gem 'faker',        '1.7.3'
+  #普通は開発環境だけで使うが今回は例外的に本番環境でも使うのでここに書く
+
+#ページネーションメソッド'will_paginate'
+  gem 'will_paginate',           '3.1.6'
+  gem 'bootstrap-will_paginate', '1.0.0'
+  #Bootstrapのページネーションスタイルを使うのでBootstrapに関するgemもインポートする
+
+
 
 group :development, :test do
   gem 'sqlite3', '1.3.13'

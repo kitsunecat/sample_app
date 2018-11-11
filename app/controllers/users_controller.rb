@@ -8,8 +8,11 @@ class UsersController < ApplicationController
 
   def index
     #indexは全ユーザを一覧表示するページとする
-    @users = User.all
+    @users = User.paginate(page: params[:page])
       #各ユーザ情報を配列変数にして@usersに格納する
+      #ページネーション機能を有効化するためにUser.allではなく.pagenateを使っている
+        #will_paginateのGEMのインストールが必要
+      #params[:page]の部分はwill_pagenateによって自動生成
   end
 
   def show
