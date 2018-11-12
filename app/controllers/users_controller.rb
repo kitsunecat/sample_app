@@ -1,10 +1,14 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:edit, :update]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
     #before_action：editやupdateの処理がなされる前にlogged_in_userが実行される
     #ログインしないとeditやupdateにアクセスできずloginページにリダイレクトされる
 
   before_action :correct_user, only: [:edit, :update]
     #自分以外のidに対してeditやupdateを実行しようとしていないか確認
+    #(destroyはindex.html.erbで自分のIDではリンクが表示されないため対象外としている
+
+  before_action :admin_user, only: :destroy
+    #削除アクションは管理者のみなので、リクエストしたユーザが管理者かどうかをadmin_userメソッドで確認する
 
   def index
     #indexは全ユーザを一覧表示するページとする
@@ -52,6 +56,9 @@ class UsersController < ApplicationController
   end
 
   def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User deleted"
+    redirect_to users_url
   end
 
   private
@@ -73,5 +80,10 @@ class UsersController < ApplicationController
         #ログインしているユーザIDがリクエストしているユーザIDと一致するか確認
         #一致しなかったらHOMEにリダイレクトする
         #redirect_toの引数のあとにもなにか続くなら()で引数指定する
+    end
+
+    #管理者かどうか確認
+    def admin_user
+      redirect_to(root_url) unless current_user.admin?
     end
 end
