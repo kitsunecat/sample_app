@@ -2,8 +2,8 @@
 
 <h1>All users</h1>
 
-<%= will_paginate %>
-    <%#
+<%= will_paginate %> <%# この部分にページ選択メニューが入る %>
+  <%#
     will_paginateメソッドは少々不思議なことに、usersビューのコードの中から
     @usersオブジェクトを自動的に見つけ出し、
     それから他のページにアクセスするためのページネーションリンクを作成しています。
@@ -14,15 +14,21 @@
     usersコントローラのindexアクションで記載
       @users = User.paginate(page: params[:page])
     params[:page]の部分はwill_pagenateによって自動生成
-     %>
+  %>
 
 <ul class="users">
-  <% @users.each do |user| %>
-    <li>
-      <%= gravatar_for user, size: 50 %>
-      <%= link_to user.name, user %>
-    </li>
-  <% end %>
+  <%= render @users %>
 </ul>
+  <%#
+    Railsが@usersをUserオブジェクトのリストであると推測する
+    そしてユーザのコレクションを列挙
+    それぞれのユーザに対して、_user.html.erbのパーシャルで出力。
+    結果、下記と同じ動作となる
+  %>
+  <%#    <ul class="users">                                                    %>
+  <%#      <% @users.each do |user| %>                                         %>
+  <%#        <%= render user %> userはUsersの１件分のデータ(|user|部分と同じ)  %>
+  <%#      <% end %>                                                           %>
+  <%#    </ul>                                                                 %>
 
-<%= will_paginate %>
+<%= will_paginate %> <%# この部分にページ選択メニューが入る %>
