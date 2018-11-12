@@ -60,6 +60,19 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_equal email, @user.email  #@user.emailがemailとなっていること
   end
 
+  test "should not allow the admin attribute to be edited via the web" do
+    log_in_as(@other_user)
+    assert_not @other_user.admin?
+    patch user_path(@other_user), params: {
+                                    user:  {
+                                              password: "",
+                                              password_confirmation: "",
+                                              admin: true
+                                           }
+                                          }
+    assert_not @other_user.reload.admin? #reloadしないとpatchの結果が反映されない
+  end
+
   test "shuld redirect edit when not logged in" do
     get edit_user_path(@user)
     assert_not flash.empty?
