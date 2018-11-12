@@ -9,7 +9,9 @@
 User.create!(name: "Example User",
              email: "example@railstutorial.org",
              password: "foobar",
-             password_confirmation: "foobar")
+             password_confirmation: "foobar",
+             admin: true
+            )
 #create"!"はユーザが無効な場合にはfalseを返さずに例外を発生させる（エラー見過ごし回避のため）
 
 99.times do |n|
