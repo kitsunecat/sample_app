@@ -77,4 +77,8 @@ class UserTest < ActiveSupport::TestCase
     #有効な文字でも規定の文字数(6文字)が入っていなければだめなはず
     assert_not @user.valid?
   end
+
+  test "authenticated? shuld return false for a user with nil digest" do
+    assert_not @user.authenticated?(:remember, '')
+  end
 end

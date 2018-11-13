@@ -1,8 +1,13 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token
+    #クラス外で使う必要がある変数を定義する
+      #remember_token：cookie保存のためにユーザ側に保存される
+      #activation_token：アカウント有効化のためにユーザに送るメールに含む
 
-  before_save {self.email = email.downcase } #validates実施前にemailアドレスは小文字化する
-  # ->before_save {email.downcase! } #元データを直接編集するやりかたならこっち
+  before_save :downcase_email #validates実施前にemailアドレスは小文字化する
+  # ->before_save {email.downcase! } メソッド化しないならこう書く
+
+  before_create :create_activation_digest #オブジェクト作成前に create_activation_digestを実行する
 
   validates :name, presence: true, length: {maximum: 50}
 
@@ -38,17 +43,66 @@ class User < ApplicationRecord
   end
 
   # 渡されたトークンがダイジェストと一致したらtrueを返す
-  def authenticated?(remember_token)
-    return false if remember_digest.nil?
+  def authenticated?(attribute, token)
+    digest = send("#{attribute}_digest")
+    return false if digest.nil?
      #他のブラウザですでにログアウトしているなどで
      #remembe_digestが空のときはfalseを返す
-    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    BCrypt::Password.new(digest).is_password?(token)
     #BCryptクラスのPasswordクラスのオブジェクトをDBに保存されているremembe_digestを引数に新規作成
     #それを.is_password?でCookieから取り出したremember_tokenと比較する
+
+    #—————————————.sendメソッドについて——————————————————
+    #authenticated?はUserモデルの下記メソッドを使う
+    # ———————————————————————————————
+    # def authenticated?
+    #   return false if remember_digest.nil?
+    #   BCrypto::Password.new(remember_digest).is_password?(remember_token)
+    # end
+    # ———————————————————————————————
+    # でもこれはCookieのremember_token用のもの
+    # ->activation_tokenでも使いたい
+    #   上記メソッドのremember部分を変数とし、activationに帰ることができれば・・・
+    #
+    # ——————————————sendメソッド（〜メタプログラミング〜）—————————————————
+    # オブジェクトのメッセージを送る
+    # 1. 変数に送りたいメソッドを定義
+    #   attribute = :activation
+    #   -> 一般的に"XXX"よりも:XXXを使う
+    # 2. .sendメソッドで命令に埋め込む
+    #   user.send("#{attribute}_digest")
+    #   -> user.activation_digest と扱われる
   end
 
   #ユーザーのログイン情報を破棄する
   def forget
     update_attribute(:remember_digest, nil)
   end
+
+  #アカウントを有効にする
+  def activate
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  #有効化用のメールを送信する
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+    #userという変数はないのでselfを使っている
+  end
+
+  private
+    def downcase_email
+      self.email.downcase!
+      # self.email = email.downcase と同義
+      # ->before_save {email.downcase! } #元データを直接編集するやりかた
+    end
+
+    #有効化トークンとダイジェストを作成および代入する
+    def create_activation_digest
+      self.activation_token = User.new_token
+      self.activation_digest = User.digest(activation_token)
+        #Cookieにセッション情報を保存するrememberメソッドと似ている
+        #違う点はrememberのときは更新であるのに対し、今回は新規に作成するユーザのために
+        #事前に実行する点
+    end
 end

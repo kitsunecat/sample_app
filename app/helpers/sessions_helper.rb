@@ -23,8 +23,9 @@ module SessionsHelper
     elsif (user_id = cookies.signed[:user_id])
       # raise #current_userのテストのために例外を発生させる
       user = User.find_by(id: user_id)
-      if user && user.authenticated?(cookies[:remember_token])
-        #ユーザが存在し、かつ、Cookie認証もOK（ログイン保持する）
+      if user && user.authenticated?(:remember, cookies[:remember_token])
+        # ユーザが存在し、かつ、Cookie認証もOK（ログイン保持する）
+        # authenticated?のsendに送るために:rememberを第一引数に記載
         log_in user
         @current_user = user
       end

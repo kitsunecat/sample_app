@@ -28,7 +28,7 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     #ユーザ情報を入力してログイン
     log_in_as(@user)
       # post login_path, params: { session: { email: @user.email, password: 'password' } }
-    assert is_loggd_in? #test_helperで定義している。現在ユーザがログインした状態かを確認
+    assert is_logged_in? #test_helperで定義している。現在ユーザがログインした状態かを確認
     get root_path
     assert_template 'static_pages/home'
     assert_select "a[href=?]", root_path, count: 2
@@ -38,5 +38,5 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", edit_user_path(@user)
     assert_select "a[href=?]", logout_path
   end
-  
+
 end

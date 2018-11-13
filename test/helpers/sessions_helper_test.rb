@@ -10,7 +10,7 @@ class SessionsHelperTest < ActionView::TestCase
   test "current_user return right user when sessions is nil" do
     assert_equal @user, current_user
       #Cookieに保存されているユーザーが@userであるはず
-    assert is_loggd_in?
+    assert is_logged_in?
       #(setupでremember(@user)しているため)ログイン状態になっていることを確認
   end
 
@@ -24,5 +24,5 @@ class SessionsHelperTest < ActionView::TestCase
       #で評価されずcurrent_userはnilを返すはず
   end
  #ここまで
- 
+
 end

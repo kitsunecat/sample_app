@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 
   def index
     #indexは全ユーザを一覧表示するページとする
-    @users = User.paginate(page: params[:page])
+    @users = User.where(activated: true).paginate(page: params[:page])
       #各ユーザ情報を配列変数にして@usersに格納する
       #ページネーション機能を有効化するためにUser.allではなく.pagenateを使っている
         #will_paginateのGEMのインストールが必要
@@ -21,6 +21,7 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+    redirect_to root_url and return unless @user.activated?
   end
 
   def new
@@ -35,10 +36,10 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      log_in @user
-      flash[:success] = "Welcome to the Sample App!" #リダイレクトしたあとのページで利用可能
-      redirect_to @user #リンク先が作成したユーザのshowページ
-      # redirect_to user_url(@user) と同じ意味だがリンク先となるのが/usersとなる
+      @user.send_activation_email
+        #アカウント有効化のメールを送信する（Userモデルで定義）
+      flash[:info] = "Please check your email to activate your account"
+      redirect_to root_url
     else
       render 'new'
     end

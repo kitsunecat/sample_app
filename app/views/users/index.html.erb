@@ -25,10 +25,11 @@
     それぞれのユーザに対して、_user.html.erbのパーシャルで出力。
     結果、下記と同じ動作となる
   %>
-  <%#    <ul class="users">                                                    %>
-  <%#      <% @users.each do |user| %>                                         %>
-  <%#        <%= render user %> userはUsersの１件分のデータ(|user|部分と同じ)  %>
-  <%#      <% end %>                                                           %>
-  <%#    </ul>                                                                 %>
+  <%#    <ul class="users">                                %>
+  <%#      <% @users.each do |user| %>
+  <%#        <%= render user %>
+  <%#       userはUsersの１件分のデータ(|user|部分と同じ)  %>
+  <%#      <% end %>                                       
+  <%#    </ul>                                             %>
 
 <%= will_paginate %> <%# この部分にページ選択メニューが入る %>

@@ -34,6 +34,12 @@ Rails.application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
+  # ———————————————————————————————
+  # activation_tokenを送るメールのテストのために修正・追記
+  config.action_mailer.default_url_options = { host: 'example.com'}
+    #テストファイル内のドメインを設定
+  # ———————————————————————————————
+
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 

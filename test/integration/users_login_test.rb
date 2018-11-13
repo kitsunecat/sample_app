@@ -22,7 +22,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     #ログイン
     post login_path, params: { session: { email:    @user.email,
                                           password: 'password' } } #ユーザ情報を入力
-    assert is_loggd_in? #test_helperで定義している。現在ユーザがログインした状態かを確認
+    assert is_logged_in? #test_helperで定義している。現在ユーザがログインした状態かを確認
     assert_redirected_to @user #createメソッドで/user/show/:idにリダイレクトされたことを確認
     follow_redirect! #createメソッドで指定された/user/show/:idに実際にリダイレクトする
     assert_template 'users/show' #レンダリングされたテンプレートは'users/show'であることを確認
@@ -31,7 +31,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", user_path(@user) #レンダリングされたテンプレートにuser/show/:idへのaタグがあることを確認
     #ログアウト
     delete logout_path
-    assert_not is_loggd_in?
+    assert_not is_logged_in?
     assert_redirected_to root_url
     #２番めのウィンドウでログアウトをクリックするユーザをシミュレートする
     delete logout_path
@@ -44,7 +44,7 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   end
 
   test "authenticated? should return false for a user with nil digest" do
-    assert_not @user.authenticated?(nil)
+    assert_not @user.authenticated?(:remember, nil)
   end
 
   test "login with remembering" do
