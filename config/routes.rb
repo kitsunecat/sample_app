@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'password_resets/new'
+
+  get 'password_resets/edit'
+
   root 'static_pages#home'
   get '/help', to:'static_pages#help'
   get '/about', to:'static_pages#about'
@@ -14,5 +18,12 @@ Rails.application.routes.draw do
 
   #AccountActivationsコントローラ
   resources :account_activations, only:[:edit]
+
+  #PasswordResetsコントローラ
+  resources :password_resets, only: [:new, :create, :edit, :update]
+    #new：forgotパスワードページ
+    #create：パスワードリセットメールの作成
+    #edit：パスワード再設定のページ
+    #update：パスワードの変更
 
 end

@@ -1,0 +1,20 @@
+<% provide(:title, "Forgot password") %>
+<h1>Forgot password</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%= form_for(:password_reset, url: password_resets_path) do |f| %>
+      <%# <form action="/password_resets" method="post">
+          が生成される。@password_resetを使うよりシンプル
+          同じviewを使用してnewとかeditを作るときは同じ書き方で使い回せる
+          参考：https://ja.stackoverflow.com/questions/18099/rails%E3%81%AEform-for%E3%81%AB%E3%82%B7%E3%83%B3%E3%83%9C%E3%83%AB%E3%82%92%E4%B8%8E%E3%81%88%E3%82%8B%E3%81%A8%E3%81%8D%E3%81%AF%E3%81%A9%E3%81%AE%E3%82%88%E3%81%86%E3%81%AA%E3%81%A8%E3%81%8D%E3%81%8B
+                https://qiita.com/kitsunecat/items/bb5bc60b509694076e3b
+       %>
+
+      <%= f.label :email %>
+      <%= f.email_field :email, class: 'form-control' %>
+
+      <%= f.submit "Submit", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>

@@ -32,7 +32,8 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                      }
                               }
     end
-    assert_equal 1, ActionMailer::Base.deliveries.size #メールの配列が1データであること。上記で登録した分
+    assert_equal 1, ActionMailer::Base.deliveries.size
+      #メールが1件送付されたこと
     user = assigns(:user)
       #直前で作られたオブジェクト@userにアクセスするassign
     assert_not user.activated?

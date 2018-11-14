@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token, :activation_token
+  attr_accessor :remember_token, :activation_token, :reset_token
     #クラス外で使う必要がある変数を定義する
       #remember_token：cookie保存のためにユーザ側に保存される
       #activation_token：アカウント有効化のためにユーザに送るメールに含む
@@ -90,7 +90,28 @@ class User < ApplicationRecord
     #userという変数はないのでselfを使っている
   end
 
+  # パスワード再設定の属性を設定する
+  def create_reset_digest
+    self.reset_token = User.new_token
+    update_columns(reset_digest:  User.digest(reset_token),
+                   reset_sent_at: Time.zone.now)
+      #以下と同義
+      # update_attribute(:reset_digest,  User.digest(reset_token))
+      # update_attribute(:reset_sent_at, Time.zone.now)
+  end
+
+  # パスワード再設定のメールを送信する
+  def send_password_reset_email
+    UserMailer.password_reset(self).deliver_now
+  end
+
+  # パスワード再設定の期限が切れている場合はtrueを返す
+  def password_reset_expired?
+    reset_sent_at < 2.hours.ago
+  end
+
   private
+    #メールアドレスをすべて小文字にする
     def downcase_email
       self.email.downcase!
       # self.email = email.downcase と同義
