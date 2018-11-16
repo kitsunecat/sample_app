@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  has_many :microposts, dependent: :destroy
+  #ここでつけた名前がメソッドにもなる
+
   attr_accessor :remember_token, :activation_token, :reset_token
     #クラス外で使う必要がある変数を定義する
       #remember_token：cookie保存のためにユーザ側に保存される

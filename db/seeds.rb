@@ -27,3 +27,12 @@ User.create!(name: "Example User",
                activated: true,
                activated_at: Time.zone.now)
 end
+
+users = User.order(:created_at).take(6)
+  #created_atで（デフォルト昇順）で並べ替えた最初の６人を配列に代入
+50.times do
+  content = Faker::Lorem.sentence(5)
+  users.each { |user| user.microposts.create!(content: content) }
+  #1ページに同じユーザが連続して表示されないように
+  #各ユーザが順番に投稿、をループするようにしている
+end
