@@ -26,4 +26,7 @@ Rails.application.routes.draw do
     #edit：パスワード再設定のページ
     #update：パスワードの変更
 
+  #Micropostsコントローラ
+  resources :microposts,          only: [:create, :destroy]
+
 end

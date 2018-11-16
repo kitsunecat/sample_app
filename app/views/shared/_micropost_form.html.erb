@@ -1,0 +1,12 @@
+<%= form_for(@micropost) do |f| %>
+  <%= render 'shared/error_messages', object: f.object %>
+    <%# 同じ意味：<%= render partial: 'shared/error_messages', locals: {object: f.object} %>
+    <%# f.objectはmicropost１件分のデータ(=@micropost) %>
+    <%# 'shared/error_messages'での変数名"object"(:objectで定義されている) %>
+    <%# 渡す値はf.object(@micropost) %>
+
+  <div class="field">
+    <%= f.text_area :content, placeholder: "Compose new micropost..." %>
+  </div>
+  <%= f.submit "Post", class: "btn btn-primary" %>
+<% end %>
