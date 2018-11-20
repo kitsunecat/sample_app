@@ -1,6 +1,32 @@
 class User < ApplicationRecord
   has_many :microposts, dependent: :destroy
   #ここでつけた名前がメソッドにもなる
+  #dependent: :destroy : 関連付けされたオブジェクトと自分自身を同時に削除する
+
+  #自分がフォローしている人との関連付け
+  # user.active_relationships.xxxというメソッドにしたい
+  has_many :active_relationships, class_name:  "Relationship", #関連付けるのはrelationshipsテーブル
+                                                               #指定しないとactive_relationshipsテーブルと予測する
+                                  foreign_key: "follower_id", #relationshipsのfollower_idが外部キーとなる
+                                                              #指定しないとactive_relationships_idと予測する
+                                                              #follower_id指定すれば、そこからfollowed_idを引っ張れるから
+                                                              #followed_idはforein_keyの指定は不要
+                                  dependent:   :destroy #userが削除されたら関連付けられたrelationshipも削除
+
+  #自分をフォローしている人との関連付け
+  has_many :passive_relationships, class_name:  "Relationship",
+                                   foreign_key: "followed_id",
+                                   dependent:   :destroy
+
+  has_many :following, through: :active_relationships, source: :followed
+    # .followingという関連付けメソッドを追加
+    # active_relationships(rerationshipsテーブル)の
+    # followerがuserのIDで、followed(followed_id)に関連付けされているテーブルのデータを持ってくる
+    # "source: :followed"を付けないと"following_id"的なやつを探してしまう
+    # throughを使うためにはUsersテーブルとRelationshipsテーブルでの関連付けの記載が必要
+  has_many :followers, through: :passive_relationships, source: :follower
+    #:followersからpassive_relationshipsの"follower"を勝手に推測してくれるが
+    #active_relationshipsとの作りを合わせていることを強調するためにあえてsourceを書いている
 
   attr_accessor :remember_token, :activation_token, :reset_token
     #クラス外で使う必要がある変数を定義する
@@ -115,6 +141,32 @@ class User < ApplicationRecord
 
   def feed
     Micropost.where("user_id=?", id)
+  end
+
+  # ユーザーのステータスフィードを返す
+  def feed
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    # following_idにuserがフォローしているfollowed_idを問い合わせるSQL文を格納する
+
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
+  end
+
+  #ユーザをフォローする
+  def follow(other_user)
+    following << other_user
+  end
+
+  def unfollow(other_user)
+    active_relationships.find_by(followed_id: other_user.id).destroy
+    # following.delete(other_user) じゃだめなん？
+    # deleteの場合、SQL直接実行
+    # また、関連付けられてるレコード削除しない。
+  end
+
+  def following?(other_user)
+    following.include?(other_user)
   end
 
   private

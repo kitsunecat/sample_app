@@ -2,6 +2,7 @@ class Micropost < ApplicationRecord
   belongs_to :user
 
   default_scope -> { order(created_at: :desc) }
+    # デフォルトの順序を変更できる
   mount_uploader :picture, PictureUploader
     #:pictureカラムとアップローダーのクラス名をヒモ付け定義
   validates :user_id, presence:true

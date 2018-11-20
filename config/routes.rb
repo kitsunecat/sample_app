@@ -29,4 +29,14 @@ Rails.application.routes.draw do
   #Micropostsコントローラ
   resources :microposts,          only: [:create, :destroy]
 
+  #:relationships
+  resources :relationships,       only: [:create, :destroy]
+
+  #following, follower
+  resources :users do
+    member do #memberは/id/を含むURLに応答するルートを作る（/users/id/followingなど）
+              #collection にすると/id/を含まないURLに応答するルートを作る（/users/followingなど）
+      get :following, :followers
+    end
+  end
 end

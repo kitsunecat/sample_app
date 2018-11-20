@@ -17,9 +17,10 @@ class UsersProfileTest < ActionDispatch::IntegrationTest
     assert_match @user.microposts.paginate(page: 1).count.to_s, response.body
       #response.bodyはそのページの完全なHTMLが含まれる
       #@user.micropo
-    assert_select 'div.pagination', count: 1    
+    assert_select 'div.pagination', count: 1
     @user.microposts.paginate(page: 1).each do |micropost|
       assert_match micropost.content, response.body
     end
   end
+
 end

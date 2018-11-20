@@ -36,3 +36,11 @@ users = User.order(:created_at).take(6)
   #1ページに同じユーザが連続して表示されないように
   #各ユーザが順番に投稿、をループするようにしている
 end
+
+# リレーションシップ
+users = User.all
+user  = users.first
+following = users[2..50]
+followers = users[3..40]
+following.each { |followed| user.follow(followed) }
+followers.each { |follower| follower.follow(user) }

@@ -1,0 +1,17 @@
+one:
+  follower: michael
+  followed: lana
+    # follower : followe_id <-> user.id
+    # user.idなのでusers.ymlから情報を探す
+
+two:
+  follower: michael
+  followed: malory
+
+three:
+  follower: lana
+  followed: michael
+
+four:
+  follower: archer
+  followed: michael
