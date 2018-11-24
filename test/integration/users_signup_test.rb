@@ -8,7 +8,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     #並行して行われる他のテストでメールが配信されたときにエラーが発生してしまいます
   end
 
-  #不正なデータでCreate仕様とするとユーザ登録できないテスト
+  #不正なデータでCreateしようとするとユーザ登録できないテスト
   test "invarid signup infomation" do
     get signup_path #これがなくても直接CREATEにPOSTすれば確認できる
     # assert_select 'form[action=?]',"/signup" #"/signup"をそのまま?に書いても問題なし

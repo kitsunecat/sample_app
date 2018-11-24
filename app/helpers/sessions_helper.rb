@@ -6,7 +6,9 @@ module SessionsHelper
 
   #ユーザーのセッションを永続的にする
   def remember(user)
-    user.remember #remember_tokenを生成
+    user.remember
+    #remember_tokenを生成し、remember_tokenを暗号化したものをremember_digestに保存
+
     cookies.permanent.signed[:user_id] = user.id #idをユーザのCookieに保存する
     cookies.permanent[:remember_token] = user.remember_token #remember_tokenをユーザのCookieに保存する
   end
