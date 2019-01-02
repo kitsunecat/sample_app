@@ -50,9 +50,9 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
   test "login with remembering" do
     log_in_as(@user, remember_me: '1')
     assert_equal cookies['remember_token'], assigns(:user).remember_token
-     #assigns(:)は直前に作成されたインスタンス変数を取得できる
-     # 直前に作成されたインスタンス変数とはusersモデルのuser
-     #remember_tokenはカラムとしてではなく、userモデルのメソッド"remember"で定義されている
+     # assigns(:)は直前に作成されたインスタンス変数を取得できるRailsテストのメソッド
+     # 直前に作成されたインスタンス変数とはlog_in_asで作成された@user
+     # remember_tokenはカラムとしてではなく、userモデルのメソッド"remember"で定義されている
   end
 
   test "login without remembering" do
