@@ -31,7 +31,7 @@ gem 'pry-rails'
 
 #画像投稿に必要(group :productionにも必要なのがある)
 #これ導入した後は"rails restart"でRails再起動する必要がある
-  gem 'carrierwave',             '1.2.2' #画像アップローダー
+  gem 'carrierwave',             '1.3.2' #画像アップローダー
   gem 'mini_magick',             '4.7.0' #画像をリサイズしたりする
 
 group :development, :test do
